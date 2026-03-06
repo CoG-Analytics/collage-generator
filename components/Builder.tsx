@@ -3,7 +3,7 @@
 import { DragEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { ArrowLeft, Download, RotateCcw, RotateCw, Trash2, Undo2, Upload } from "lucide-react";
-import { FRAME_SIZES, MIN_FILES } from "@/lib/constants";
+import { FRAME_SIZES } from "@/lib/constants";
 import { renderCollageToCanvas } from "@/lib/canvasRender";
 import { getSlotRects } from "@/lib/layout";
 import { getTemplateById, TEMPLATES } from "@/lib/templates";
@@ -828,7 +828,7 @@ export default function Builder() {
           <div className="flex items-center gap-2">
             <h2 className="text-sm font-medium text-slate-800">Preview</h2>
             <p className="text-xs text-slate-600">
-              {assets.length} image(s) loaded{assets.length < MIN_FILES ? " (minimum 2 for export)" : ""}
+              {assets.length} image(s) loaded
             </p>
           </div>
           <label className="inline-flex items-center gap-2 text-xs text-slate-700" htmlFor="overlay-toggle">

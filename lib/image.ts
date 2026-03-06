@@ -1,7 +1,6 @@
 import {
   ACCEPTED_MIME_TYPES,
-  MAX_FILE_SIZE_BYTES,
-  MIN_FILES
+  MAX_FILE_SIZE_BYTES
 } from "@/lib/constants";
 
 const fileTypeError = "Only JPG, JPEG, and PNG files are supported.";
@@ -44,8 +43,6 @@ export const validateFiles = (existingFileNames: string[], files: File[]): FileV
     errors: Array.from(new Set(errors))
   };
 };
-
-export const hasValidImageCount = (count: number) => count >= MIN_FILES;
 
 export const decodeFileToBitmap = async (file: File): Promise<ImageBitmap> => {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });

@@ -1,6 +1,5 @@
 import { FrameSize } from "@/lib/types";
 
-export const MIN_FILES = 2;
 export const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 export const ACCEPTED_MIME_TYPES = new Set(["image/jpeg", "image/png"]);
 

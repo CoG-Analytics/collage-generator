@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { getTemplateById } from "@/lib/templates";
-import { decodeFileToBitmap, hasValidImageCount, makeId, validateFiles } from "@/lib/image";
+import { decodeFileToBitmap, makeId, validateFiles } from "@/lib/image";
 import { ImageAsset, Orientation, ProjectConfig, SlotState } from "@/lib/types";
 
 interface UiState {
@@ -277,5 +277,5 @@ export const useCollageStore = create<CollageState>((set, get) => ({
 
 export const selectCanExport = () => {
   const state = useCollageStore.getState();
-  return hasValidImageCount(state.assets.length);
+  return state.slots.some((slot) => slot.imageId !== null);
 };
