@@ -610,23 +610,31 @@ export default function Builder() {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <label className="text-xs text-slate-700" htmlFor="fit-mode">
-                Fit mode
-              </label>
-              <select
-                id="fit-mode"
-                className="rounded-md border border-slate-300 px-2 py-1 text-xs"
-                value={selectedSlot.fitMode}
-                onChange={(event) =>
-                  updateSlotTransform(selectedSlot.slotId, {
-                    fitMode: event.target.value as typeof selectedSlot.fitMode,
-                    scale: 1
-                  })
-                }
-              >
-                <option value="cover">cover</option>
-                <option value="contain">contain</option>
-              </select>
+              <span className="text-xs text-slate-700">Fit mode</span>
+              <div className="grid grid-cols-2 gap-1">
+                {(["cover", "contain"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() =>
+                      updateSlotTransform(selectedSlot.slotId, {
+                        fitMode: mode,
+                        scale: 1,
+                        offsetX: 0,
+                        offsetY: 0
+                      })
+                    }
+                    className={`rounded-md border px-2 py-1 text-xs capitalize ${
+                      selectedSlot.fitMode === mode
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-300 text-slate-700"
+                    }`}
+                    aria-label={`Set fit mode to ${mode}`}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
 
               <label className="text-xs text-slate-700" htmlFor="scale">
                 Zoom
