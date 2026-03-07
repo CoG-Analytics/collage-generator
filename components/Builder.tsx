@@ -175,7 +175,9 @@ export default function Builder() {
     multiple: true,
     accept: {
       "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"]
+      "image/png": [".png"],
+      "image/heic": [".heic"],
+      "image/heif": [".heif"]
     }
   });
 
@@ -506,7 +508,7 @@ export default function Builder() {
               <input {...getInputProps()} aria-label="Choose image files" />
               <div className="flex items-center gap-3 text-slate-700">
                 <Upload className="h-4 w-4" />
-                <p>Drag and drop JPG/PNG files here, or click to browse.</p>
+                <p>Drag and drop JPG/PNG/HEIC/HEIF files here, or click to browse.</p>
               </div>
             </div>
 

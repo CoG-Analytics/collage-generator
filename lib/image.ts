@@ -1,10 +1,11 @@
 import {
+  ACCEPTED_FILE_EXTENSIONS,
   ACCEPTED_MIME_TYPES,
   MAX_FILE_SIZE_BYTES
 } from "@/lib/constants";
 
-const fileTypeError = "Only JPG, JPEG, and PNG files are supported.";
-const fileSizeError = "Each file must be 20MB or less.";
+const fileTypeError = "Only JPG, JPEG, PNG, HEIC, and HEIF files are supported.";
+const fileSizeError = "Each file must be 50MB or less.";
 
 interface FileValidationResult {
   validFiles: File[];
@@ -18,8 +19,13 @@ export const validateFiles = (existingFileNames: string[], files: File[]): FileV
 
   files.forEach((file) => {
     const normalizedName = file.name.toLowerCase();
+    const extension = normalizedName.includes(".")
+      ? `.${normalizedName.split(".").pop()}`
+      : "";
     let isValid = true;
-    if (!ACCEPTED_MIME_TYPES.has(file.type)) {
+    const hasAcceptedMime = !!file.type && ACCEPTED_MIME_TYPES.has(file.type.toLowerCase());
+    const hasAcceptedExtension = ACCEPTED_FILE_EXTENSIONS.has(extension);
+    if (!hasAcceptedMime && !hasAcceptedExtension) {
       errors.push(`${file.name}: ${fileTypeError}`);
       isValid = false;
     }
