@@ -45,8 +45,38 @@ export const validateFiles = (existingFileNames: string[], files: File[]): FileV
 };
 
 export const decodeFileToBitmap = async (file: File): Promise<ImageBitmap> => {
-  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-  return bitmap;
+  const canCreateBitmap = typeof createImageBitmap === "function";
+
+  if (canCreateBitmap) {
+    try {
+      return await createImageBitmap(file, { imageOrientation: "from-image" });
+    } catch {
+      // Some browsers (notably Safari variants) reject decode options for valid images.
+    }
+
+    try {
+      return await createImageBitmap(file);
+    } catch {
+      // Fall through to <img> decoding path.
+    }
+  }
+
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("Unable to decode image."));
+      img.src = objectUrl;
+    });
+
+    if (!canCreateBitmap) {
+      throw new Error("Image decoding is not supported in this browser.");
+    }
+    return await createImageBitmap(image);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 };
 
 export const makeId = () =>

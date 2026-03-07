@@ -478,6 +478,17 @@ export default function Builder() {
     setDragOverSlotId(null);
   };
 
+  const assignAssetToFirstEmptySlot = useCallback(
+    (imageId: string) => {
+      const firstEmptySlot = slots.find((slot) => !slot.imageId);
+      if (!firstEmptySlot) {
+        return;
+      }
+      setSlotImage(firstEmptySlot.slotId, imageId);
+    },
+    [setSlotImage, slots]
+  );
+
   return (
     <main className="mx-auto grid h-[calc(100vh-2rem)] max-w-7xl grid-cols-1 gap-4 overflow-hidden px-4 py-4 lg:grid-cols-[380px_minmax(0,1fr)]">
       <section className="flex min-h-0 flex-col gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -528,6 +539,7 @@ export default function Builder() {
                       <div
                         key={asset.id}
                         draggable
+                        onClick={() => assignAssetToFirstEmptySlot(asset.id)}
                         onDragStart={(event) => {
                           event.dataTransfer.setData("text/plain", asset.id);
                           event.dataTransfer.effectAllowed = "move";
@@ -570,7 +582,7 @@ export default function Builder() {
             <div className="flex items-center justify-between gap-2">
               <button
                 type="button"
-                onClick={() => setSelectedSlot(selectedSlot.slotId)}
+                onClick={() => setSelectedSlot(null)}
                 className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />

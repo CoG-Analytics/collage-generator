@@ -188,7 +188,7 @@ export const useCollageStore = create<CollageState>((set, get) => ({
     set((state) => ({
       uiState: {
         ...state.uiState,
-        selectedSlot: state.uiState.selectedSlot === slotId ? null : slotId
+        selectedSlot: slotId
       }
     })),
 
