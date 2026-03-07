@@ -111,20 +111,21 @@ export const useCollageStore = create<CollageState>((set, get) => ({
 
     const decodedAssets: ImageAsset[] = [];
     for (const file of validationResult.validFiles) {
+      const objectUrl = URL.createObjectURL(file);
       try {
-        const bitmap = await decodeFileToBitmap(file);
-        const objectUrl = URL.createObjectURL(file);
+        const decoded = await decodeFileToBitmap(file, objectUrl);
         decodedAssets.push({
           id: makeId(),
           fileName: file.name,
           fileType: file.type,
           fileSize: file.size,
           objectUrl,
-          bitmap,
-          width: bitmap.width,
-          height: bitmap.height
+          bitmap: decoded.bitmap,
+          width: decoded.width,
+          height: decoded.height
         });
       } catch {
+        URL.revokeObjectURL(objectUrl);
         set((prev) => ({ errors: [...prev.errors, `${file.name}: Unable to decode image.`] }));
       }
     }
@@ -149,7 +150,9 @@ export const useCollageStore = create<CollageState>((set, get) => ({
     const asset = state.assets.find((a) => a.id === assetId);
     if (asset) {
       URL.revokeObjectURL(asset.objectUrl);
-      asset.bitmap.close();
+      if (typeof ImageBitmap !== "undefined" && asset.bitmap instanceof ImageBitmap) {
+        asset.bitmap.close();
+      }
     }
 
     const nextAssets = state.assets.filter((a) => a.id !== assetId);
@@ -254,7 +257,9 @@ export const useCollageStore = create<CollageState>((set, get) => ({
     const state = get();
     state.assets.forEach((asset) => {
       URL.revokeObjectURL(asset.objectUrl);
-      asset.bitmap.close();
+      if (typeof ImageBitmap !== "undefined" && asset.bitmap instanceof ImageBitmap) {
+        asset.bitmap.close();
+      }
     });
 
     set({

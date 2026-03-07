@@ -31,7 +31,7 @@ export interface ImageAsset {
   fileType: string;
   fileSize: number;
   objectUrl: string;
-  bitmap: ImageBitmap;
+  bitmap: CanvasImageSource;
   width: number;
   height: number;
 }
