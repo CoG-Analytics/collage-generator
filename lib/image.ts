@@ -73,7 +73,27 @@ export const decodeFileToBitmap = async (file: File): Promise<ImageBitmap> => {
     if (!canCreateBitmap) {
       throw new Error("Image decoding is not supported in this browser.");
     }
-    return await createImageBitmap(image);
+
+    try {
+      return await createImageBitmap(image);
+    } catch {
+      // Final fallback: draw into a canvas first, then create bitmap from pixels.
+      const width = image.naturalWidth || image.width;
+      const height = image.naturalHeight || image.height;
+      if (!width || !height) {
+        throw new Error("Unable to decode image.");
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("Unable to decode image.");
+      }
+      ctx.drawImage(image, 0, 0, width, height);
+      return await createImageBitmap(canvas);
+    }
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
